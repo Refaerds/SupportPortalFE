@@ -51,7 +51,7 @@ const ContactUs = ({ currentUser, setAlert }) => {
                 else {
                     clearForm();
                     form.classList.remove('was-validated');
-                    setAlert('success', `You ticket #${response} has been submitted`)
+                    setAlert('success', `Your ticket #${response} has been submitted`)
                 }
             })
             .catch(err => {
