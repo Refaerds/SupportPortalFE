@@ -19,6 +19,12 @@ const PersonalDataForm = ({ currentUser, header, submitText, route, onSubmit }) 
         form.classList.add('was-validated'); 
     }
 
+    const handleEnterKeyPress = (event) => {
+        if (event.charCode === 13) {
+            handleSubmit()
+        }
+    }
+
     const nameField = route === 'signin' ? null 
         : <div className='form-group'>
             <label htmlFor="name">Name:</label>
@@ -82,7 +88,9 @@ const PersonalDataForm = ({ currentUser, header, submitText, route, onSubmit }) 
                         placeholder="Enter your password" 
                         id="pwd" 
                         required
-                        onChange={(event) => {setPwd(event.target.value)}}>
+                        onChange={(event) => {setPwd(event.target.value)}}
+                        onKeyPress={handleEnterKeyPress}
+                        >
                     </input>
                     <div className="invalid-feedback">
                         Please enter a password
