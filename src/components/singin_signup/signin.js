@@ -10,17 +10,13 @@ const mapDispatchToProps = (dispatch) => ({
 const SignIn = ({ signIn }) => {
 
     return (
-        <div className='text-left p-5 row'>
-            <div className='col-md-3'></div>
-            <div className='col-md-6'>
-                <PersonalDataForm
-                    header='Sign in'
-                    route='signin'
-                    submitText='Sign in'
-                    onSubmit={signIn}
-                />
-            </div>
-            <div className='col-md-3'></div>
+        <div className='w-full sm:w-2/3 lg:w-1/2 mx-auto'>
+            <PersonalDataForm
+                header='Sign in'
+                route='signin'
+                submitText='Sign in'
+                onSubmit={signIn}
+            />
         </div>
     )
 }

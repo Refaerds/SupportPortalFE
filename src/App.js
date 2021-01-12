@@ -1,36 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import 'bootstrap';
-import Navbar from './components/navbar';
+import Navbar from './components/nav/navbar';
 import ContentBox from './components/reusable/contentbox';
 import Header from './components/homepage/header';
 import Faq from './components/homepage/faq';
 import ContactUs from './components/homepage/contactus';
-import Footer from './components/footer';
 import Profile from './components/profile/profile';
 import SignUp from './components/singin_signup/signup';
 import SignIn from './components/singin_signup/signin';
 import Alert from './components/reusable/alert';
 
-
 const mapStateToProps = (state) => ({
-  route: state.page.route
+  route: state.page.route,
+  alertType: state.page.alertType
 });
 
-const App = ({ route }) => {
-
-  useEffect(() => {
-    document.title = 'Avelraan Support'
-  }, [])
+const App = ({ route, alertType }) => {
 
   return (
     <div className="App position-relative">
 
       <Navbar/>
 
-      <div className='main'>
+      <main className='pb-10 pt-24 px-3 sm:px-8'>
 
-        <Alert/>
+        {alertType ? <Alert/> : null}
 
         {route === 'signup' 
           ? <SignUp/>
@@ -57,10 +51,7 @@ const App = ({ route }) => {
           ? <Profile/>
           : null
         }
-      </div>
-      
-      <Footer/>
-
+      </main>
     </div>
   );
 }

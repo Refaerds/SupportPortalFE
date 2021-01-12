@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getTickets } from '../../redux/mytickets/mytickets-actions';
+import Spinner from '../reusable/loading-spinner';
 
 const mapStateToProps = (state) => ({
     tickets: state.mytickets.tickets,
@@ -18,42 +19,46 @@ const MyTickets = ({ tickets, tickets_status_pending, getTickets }) => {
     }, [])
 
     const handleToggle = (event) => {
-        event.currentTarget.nextSibling.classList.toggle('d-none');
+        event.currentTarget.nextSibling.classList.toggle('hidden');
     }
 
-    let ticketsList = null;
+    let ticketscontent;
 
     if (tickets_status_pending) {
-        ticketsList = 
-        <div className="text-center pt-4">
-            <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>
-        </div>
+        ticketscontent = <Spinner/>
     }
     else {
         if (tickets && tickets.length) {
-            ticketsList = tickets.map(ticket => {
+            ticketscontent = tickets.map(ticket => {
+                let statusColor = ticket.status === 'pending' ? 'bg-yellow-600' : ticket.status === 'solved' ? 'bg-green-600' 
+                    : ticket.status === 'rejected' ? 'bg-red-600' : 'bg-custom-500';
+
                 return <div className='underlined' key={ticket.id}>
-                    <p className='ticket-header p-3' role='button' onClick={handleToggle}>
-                        <span className='ticket-status mr-2 text-capitalize'>{ticket.status}</span>
-                        #{ticket.id}
+                    <p className='py-4 text-xl font-medium' role='button' onClick={handleToggle}>
+                        <span className={`mr-2 capitalize text-gray-200 px-2 py-1 rounded ${statusColor}`}>{ticket.status}</span>
+                        # {ticket.id}
                     </p>
-                    <div className='d-none pb-3 pl-3'>
-                        <p className="text-capitalize">Issue Type: {ticket.issue} Issue</p>
-                        <p>Description: {ticket.description}</p>
+                    <div className='pb-3 pl-3 hidden'>
+                        <p className="capitalize">
+                            <span className="font-medium">Issue Type: </span> 
+                            <span>{ticket.issue} Issue</span>
+                        </p>
+                        <p className="capitalize">
+                            <span className="font-medium">Description: </span>
+                            <span>{ticket.description}</span>
+                        </p>
                     </div>
                 </div>
             })
         }
         else {
-            ticketsList = <p>You don't have any tickets</p>
+            ticketscontent = <p>You don't have any tickets</p>
         }
     }
 
     return (
-        <div className='text-left'>
-            {ticketsList}
+        <div>
+            {ticketscontent}
         </div>
     )
 }

@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch) => ({
 const ProfileTabs = ({ handleProfileRouteChange, profile_route }) => {
     
     return (
-        <div className='text-left'>
+        <div>
             <div className='underlined mt-4' role='button'>
                 <h4 className={profile_route === 'myaccount' ? 'profiletab active' : 'profiletab'} onClick={() => handleProfileRouteChange('myaccount')}>
                     My Account

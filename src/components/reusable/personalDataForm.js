@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import FormElement from '../reusable/form-element';
+import Button from '../reusable/button';
+import PwdTooltip from '../reusable/pwdTooltip';
+import { validateName, validateEmail, validatePwd } from '../../utils/validations';
 
 const mapStateToProps = (state) => ({
     currentUser: state.user.currentUser
@@ -10,13 +14,76 @@ const PersonalDataForm = ({ currentUser, header, submitText, route, onSubmit }) 
     const [ email, setEmail ] = useState(currentUser.email === undefined ? '' : currentUser.email);
     const [ pwd, setPwd ] = useState('');
     const [ new_pwd, setNewPwd ] = useState('');
+    const [ nameValid, setNameValid ] = useState('');
+    const [ emailValid, setEmailValid ] = useState('');
+    const [ pwdValid, setPwdValid ] = useState('');
+    const [ newPwdValid, setNewPwdValid ] = useState(''); 
+
+    const validateNameInput = (name) => {
+
+        const validated = validateName(name);
+
+        if (!validated) {
+            setNameValid('invalid')
+        }
+        else {
+            setNameValid('valid')
+        }
+        return validated;
+    }
+
+    const validateEmailInput = (email) => {
+
+        const validated = validateEmail(email);
+
+        if (!validated) {
+            setEmailValid('invalid')
+        }
+        else {
+            setEmailValid('valid')
+        }
+        return validated;
+    }
+
+    const validatePwdInput = (pwd) => {
+
+        const validated = validatePwd(pwd);
+
+        if (!validated) {
+            setPwdValid('invalid')
+        }
+        else {
+            setPwdValid('valid')
+        }
+        return validated;
+    }
+
+    const validateNewPwdInput = (pwd) => {
+
+        const validated = validatePwd(pwd);
+
+        if (!validated) {
+            setNewPwdValid('invalid')
+        }
+        else {
+            setNewPwdValid('valid')
+        }
+        return validated;
+    }
+
+    const validateAllInputs = () => {
+        const nameIsValid = nameField === null ? true : validateNameInput(name);
+        const emailIsValid = validateEmailInput(email);
+        const pwdIsValid = validatePwdInput(pwd);
+        const newPwdIsValid = newPwdField === null ? true : validateNewPwdInput(new_pwd);
+
+        return nameIsValid && emailIsValid && pwdIsValid && newPwdIsValid;
+    }
 
     const handleSubmit = () => {
-        const form = document.getElementById('personal-data-form');
-        if (form.checkValidity()) {
+        if (validateAllInputs()) {
             onSubmit({name, email, pwd, new_pwd});
         }
-        form.classList.add('was-validated'); 
     }
 
     const handleEnterKeyPress = (event) => {
@@ -25,79 +92,77 @@ const PersonalDataForm = ({ currentUser, header, submitText, route, onSubmit }) 
         }
     }
 
-    const nameField = route === 'signin' ? null 
-        : <div className='form-group'>
+    const nameField = route === 'signin' ? null : 
+        <FormElement validated={nameValid}>
             <label htmlFor="name">Name:</label>
             <input 
                 type="text" 
-                className="form-control" 
                 placeholder="Enter your name" 
                 value={name}
                 id="name" 
                 required
-                onChange={(event) => {setName(event.target.value)}}>
+                onChange={event => {setName(event.target.value)}}
+                onBlur={event => {if (event.target.value) validateNameInput(event.target.value)}}>
             </input>
-            <div className="invalid-feedback">
-                Please enter your name
-            </div>
-        </div>;
+        </FormElement>;
 
-    const newPwdField = route === 'myaccount' 
-        ? <div className="form-group">
-            <label htmlFor="new_pwd">New Password:</label>
+    const newPwdField = route === 'myaccount' ? 
+        <FormElement validated={newPwdValid}>
+            <label htmlFor="new_pwd">
+                New Password:
+                <PwdTooltip/>
+            </label>
             <input 
                 type="password" 
-                className="form-control" 
                 placeholder="Enter a new password or leave blank to keep the old one" 
                 id="new_pwd"
-                onChange={(event) => {setNewPwd(event.target.value)}}>
+                onChange={event => {setNewPwd(event.target.value)}}
+                onBlur={event => {if (event.target.value) validateNewPwdInput(event.target.value)}}>
             </input>
-            <div className="invalid-feedback">
-                Please enter a new password
-            </div>
-        </div>
+        </FormElement>
         : null;
     
     return (
-        <div className='text-left'>
-            <div className='underlined'>
+        <div>
+            <div className='underlined mb-3'>
                 <h4>{header}:</h4>
             </div>
-            <form name='personal-data-form' id='personal-data-form' className='needs-validation' noValidate>
+            <form name='personal-data-form' id='personal-data-form' noValidate>
+
                 {nameField}
-                <div className="form-group">
+
+                <FormElement validated={emailValid}>
                     <label htmlFor="email">Email address:</label>
                     <input 
                         type="email" 
-                        className="form-control" 
                         placeholder="Enter email" 
                         value={email}
                         id="email"
                         required
-                        onChange={(event) => {setEmail(event.target.value)}}>
+                        onChange={event => {setEmail(event.target.value)}}
+                        onBlur={event => {if (event.target.value) validateEmailInput(event.target.value)}}>
                     </input>
-                    <div className="invalid-feedback">
-                        Please enter a valid email address
-                    </div>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="pwd">Password:</label>
+                </FormElement>
+
+                <FormElement validated={pwdValid}>
+                    <label htmlFor="pwd">
+                        Password:
+                        <PwdTooltip/>
+                    </label>
                     <input 
                         type="password" 
-                        className="form-control" 
                         placeholder="Enter your password" 
                         id="pwd" 
                         required
-                        onChange={(event) => {setPwd(event.target.value)}}
-                        onKeyPress={handleEnterKeyPress}
-                        >
+                        onChange={event => {setPwd(event.target.value)}}
+                        onBlur={event => {if (event.target.value) validatePwdInput(event.target.value)}}
+                        onKeyPress={handleEnterKeyPress}>
                     </input>
-                    <div className="invalid-feedback">
-                        Please enter a password
-                    </div>
-                </div>
+                </FormElement>
+
                 {newPwdField}
-                <button type="button" className="btn shadow" onClick={handleSubmit}>{submitText}</button>
+
+                <Button onButtonClick={handleSubmit} text={submitText}/>
             </form>
         </div>
     )

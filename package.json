@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^5.8.0",
+    "@tailwindcss/postcss7-compat": "^2.0.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "popper.js": "^1.16.1",
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.35",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.2",
@@ -15,13 +18,14 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "serve": "^11.3.2"
+    "serve": "^11.3.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2"
   },
   "scripts": {
     "start": "serve -s build",
-    "start:dev": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start:dev": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -38,11 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "bootstrap": "^5.0.0-alpha1",
-    "bootstrap-loader": "^3.0.4",
-    "jquery": "^3.5.1",
-    "tether": "^1.4.7"
   }
 }

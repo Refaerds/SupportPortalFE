@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getFAQs } from '../../redux/faq/faq-actions';
+import Spinner from '../reusable/loading-spinner';
 
 const mapStateToProps = (state) => ({
     faqs: state.faq.faqs,
@@ -20,7 +21,7 @@ const Faq = ({ faqs, faqs_status_pending, getFAQs }) => {
     const handleToggle = (event) => {
         const span = event.currentTarget;
 
-        span.nextSibling.classList.toggle('d-none');
+        span.nextSibling.classList.toggle('hidden');
         if (span.firstChild.innerHTML === "+") {
             span.firstChild.innerHTML = "&ndash;";
         } else {
@@ -28,41 +29,36 @@ const Faq = ({ faqs, faqs_status_pending, getFAQs }) => {
         }
     }
 
-    let faqslist = null;
+    let faqscontent;
 
     if (faqs_status_pending) {
-        faqslist = 
-        <div className="text-center pt-4">
-            <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>
-        </div>
+        faqscontent = <Spinner/>
     }
     else {
         if (faqs && faqs.length) {
-            faqslist = faqs.map(faq => {
+            faqscontent = faqs.map(faq => {
                 return <div className='underlined' key={faq.id}>
-                    <h5 className='faq-header p-2' role='button' onClick={handleToggle}>
-                        <span className='plus-minus'>+</span>
+                    <h5 role='button' onClick={handleToggle}>
+                        <span className='w-6 inline-block font-bold'>+</span>
                         {faq.question}
                     </h5>
-                    <div className='d-none p-2'>
+                    <div className='hidden pt-2 pb-6'>
                         <p>{faq.answer}</p>
                     </div>
                 </div>
             })
         }
         else {
-            faqslist = <p>At the moment, we don't have any FAQs to share</p>
+            faqscontent = <p>At the moment, we don't have any FAQs to share</p>
         }
     }
     
     return (
-        <div className='text-left'>
+        <div>
             <div className='underlined'>
                 <h4>FAQs:</h4>
             </div>
-            {faqslist}
+            {faqscontent}
         </div>
     )
 }
