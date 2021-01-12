@@ -72,7 +72,9 @@
   .profiletab.active {
     @apply text-2xl;
   }
-  
+}
+
+@layer utilities {
   .alert-error {
     @apply bg-red-300 text-red-800;
   }
